@@ -10,7 +10,7 @@
 # Expected: "John" + "Doe" => "John Doe"
 def full_name(first_name, last_name)
   # TODO: Implement using string concatenation or interpolation
-  nil
+  first_name + " " + last_name
 end
 
 # Exercise 2: String interpolation
@@ -18,7 +18,7 @@ end
 # Expected: greet("Alice") => "Hello, Alice! Welcome to Ruby."
 def greet(name)
   # TODO: Use #{} for string interpolation
-  nil
+  "Hello, #{name}! Welcome to Ruby."
 end
 
 # Exercise 3: String methods
@@ -27,7 +27,8 @@ end
 def process_string(str)
   # TODO: Use .upcase and .length methods
   # Return an array [uppercase_string, length]
-  nil
+  arr =[]
+  arr << str.upcase<< str.length
 end
 
 # Exercise 4: String slicing
@@ -35,7 +36,7 @@ end
 # Expected: first_chars("Ruby") => "Rub"
 def first_chars(str)
   # TODO: Use string slicing with [start..end] or [start, length]
-  nil
+  str[0..2]
 end
 
 # Exercise 5: String manipulation
@@ -43,7 +44,7 @@ end
 # Expected: replace_vowel("banana") => "bonono"
 def replace_vowel(str)
   # TODO: Use .gsub method
-  nil
+  str.gsub("a", "o")
 end
 
 # Exercise 6: Check substring
@@ -51,7 +52,7 @@ end
 # Expected: contains_word?("I love Ruby", "ruby") => true
 def contains_word?(text, word)
   # TODO: Use .downcase and .include? methods
-  nil
+  text.downcase.include?(word.downcase)
 end
 
 # ============================================
