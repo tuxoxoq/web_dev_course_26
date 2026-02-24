@@ -11,7 +11,8 @@
 class WeatherStation
   # TODO: Initialize with an empty array of observers
   # TODO: Add temperature, humidity, and pressure attributes
-  
+  attr_reader :temperature, :humidity, :pressure
+
   def initialize
     @observers = []
     @temperature = 0
@@ -21,17 +22,17 @@ class WeatherStation
   
   # TODO: Implement attach method to add an observer
   def attach(observer)
-    nil
+    @observers << observer unless @observers.include?(observer)
   end
   
   # TODO: Implement detach method to remove an observer
   def detach(observer)
-    nil
+    @observers.delete(observer)
   end
   
   # TODO: Implement notify method to call update on all observers
   def notify
-    nil
+    @observers.each { |obs| obs.update(self) }
   end
   
   def set_measurements(temperature, humidity, pressure)
@@ -41,7 +42,7 @@ class WeatherStation
     notify
   end
   
-  attr_reader :temperature, :humidity, :pressure
+
 end
 
 class CurrentConditionsDisplay
@@ -49,7 +50,9 @@ class CurrentConditionsDisplay
   # Return "Current conditions: #{temperature}°C, #{humidity}% humidity"
   
   def update(weather_station)
-    nil
+    temp = weather_station.temperature
+    hum  = weather_station.humidity
+    "Current conditions: #{temp}°C, #{hum}% humidity"
   end
 end
 
@@ -63,7 +66,11 @@ class StatisticsDisplay
   # Return "Avg temperature: #{average}°C"
   
   def update(weather_station)
-    nil
+    temp = weather_station.temperature
+    @temperatures << temp.to_f
+
+    avg = @temperatures.sum / @temperatures.size
+    "Avg temperature: %.2f°C" % avg
   end
 end
 
@@ -82,26 +89,29 @@ class Stock
   
   # TODO: Implement subscribe method to add observer
   def subscribe(observer)
-    nil
+    @observers << observer unless @observers.include?(observer)
   end
   
   # TODO: Implement unsubscribe method to remove observer
   def unsubscribe(observer)
-    nil
+    @observers.delete(observer)
   end
   
   def update_price(new_price)
     old_price = @price
     @price = new_price
     # TODO: Notify all observers with old_price and new_price
-    nil
+    notify_observers(old_price, new_price)
   end
   
   # TODO: Implement notify_observers method
   def notify_observers(old_price, new_price)
-    nil
+    @observers.each do |observer|
+      observer.on_price_change(self, old_price, new_price)
   end
 end
+end
+
 
 class Investor
   attr_reader :name, :notifications
@@ -116,7 +126,9 @@ class Investor
   # Return the notification string
   
   def on_price_change(stock, old_price, new_price)
-    nil
+    notification = "#{stock.symbol}: #{old_price} -> #{new_price}"
+    @notifications << notification
+    notification
   end
 end
 
@@ -130,20 +142,21 @@ module Observable
   def add_observer(observer)
     @observers ||= []
     # TODO: Add observer to array if not already present
-    nil
+    @observers << observer unless @observers.include?(observer)
   end
   
   def delete_observer(observer)
     @observers ||= []
-    # TODO: Remove observer from array
-    nil
+    @observers.delete(observer)
   end
   
   def notify_observers(data = nil)
     @observers ||= []
     # TODO: Call update method on each observer with self and data
-    nil
+    @observers.each do |observer|
+      observer.update(self, data)
   end
+end
 end
 
 class NewsAgency
@@ -154,7 +167,7 @@ class NewsAgency
   def publish_news(news)
     @latest_news = news
     # TODO: Notify all observers with the news
-    nil
+    notify_observers(news)
   end
 end
 
@@ -171,7 +184,7 @@ class NewsSubscriber
   # news_agency is the first parameter, news is the second
   
   def update(news_agency, news)
-    nil
+    @received_news << news
   end
 end
 
